@@ -1,67 +1,42 @@
-// Factory function
+class Calculator {
+    constructor() {
+        this.display = document.querySelector('.display');
 
-function crateCalculator() {
-    return {
-        
-        display: document.querySelector('.display'),
+        this.eventButton = () => {
+            document.addEventListener('click', event => {
+                const element = event.target;
+                if (element.classList.contains('button-number')) this.displayValues(element);
+                if (element.classList.contains('button-clear')) this.clearDisplay();
+                if (element.classList.contains('button-delete')) this.deleteNumber();
+                if (element.classList.contains('button-equal')) this.createCount();
+            });
+        };
 
-        init: function() {
-            this.clickButton();
-        },
+        this.displayValues = value => this.display.value += value.innerText;
 
-        clearDisplay() {
-            this.display.value = '';
-        },
+        this.clearDisplay = () => this.display.value = '';
 
-        deleteNumber() {
-            this.display.value = this.display.value.slice(0, -1);
-        },
-        
-        createCount() {
-            let count = this.display.value;
-            
+        this.deleteNumber = () => this.display.value = this.display.value.slice(0, -1);
+
+        this.createCount = () => {
             try {
+                let count = this.display.value;
                 count = eval(count);
 
                 if (!count) {
                     alert('Conta inválida');
                     return;
                 }
-
                 this.display.value = count;
-            } catch(error) {
+            } catch (error) {
                 alert('Conta inválida');
+                this.clearDisplay();
             }
-        },
+        };
 
-        clickButton() {
-            document.addEventListener('click', function(event) {
-                const element = event.target;
+        this.startCalculator = () => this.eventButton();
+    }
+} 
 
-                if (element.classList.contains('button-number')) {
-                    this.displayValues(element.innerText);
-                }
-
-                if (element.classList.contains('button-clear')) {
-                    this.clearDisplay();
-                }
-
-                if (element.classList.contains('button-delete')) {
-                    this.deleteNumber();
-                }
-
-                if (element.classList.contains('button-equal')) {
-                    this.createCount();
-                }
-            }.bind(this));
-        },
-
-        displayValues: function(value) {
-            this.display.value += value; 
-        }
-
-    };
-}
-
-const calculator1 = crateCalculator();
-calculator1.init();
+const calculator = new Calculator();
+calculator.startCalculator();
